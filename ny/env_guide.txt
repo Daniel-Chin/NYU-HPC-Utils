@@ -1,8 +1,11 @@
+# Name your env. 
+ENV_NAME=masdar
+
 cd /scratch/$USER
 mkdir py_env
 cd py_env
-mkdir masdar
-cd masdar
+mkdir $ENV_NAME
+cd $ENV_NAME
 
 # Select an overlay image. 
     ls /scratch/work/public/overlay-fs-ext3
@@ -14,31 +17,23 @@ cd masdar
 
     SINGULARITY=cuda11.6.124-cudnn8.4.0.27-devel-ubuntu20.04.4.sif
 
-touch ./select_images
-echo OVERLAY=$OVERLAY >> ./select_images
-echo SINGULARITY=$SINGULARITY >> ./select_images
-
 cp -rp /scratch/work/public/overlay-fs-ext3/$OVERLAY.gz .
 gunzip $OVERLAY.gz
 
 touch ./sing
-echo source /scratch/$USER/py_env/masdar/select_images >> ./sing
-echo singularity exec --overlay /scratch/$USER/py_env/masdar/$OVERLAY:\$1 /scratch/work/public/singularity/$SINGULARITY /bin/bash >> ./sing
+echo "singularity exec --overlay /scratch/$USER/py_env/$ENV_NAME/$OVERLAY:\$1 /scratch/work/public/singularity/$SINGULARITY /bin/bash" >> ./sing
 source ./sing rw
 
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
 sh Miniconda3-latest-Linux-x86_64.sh -b -p /ext3/miniconda3
-rm Miniconda3-latest-Linux-x86_64.sh # if you don't need this file any longer
+rm Miniconda3-latest-Linux-x86_64.sh    # if you don't need this file any longer
 
-nano /ext3/env.sh
-
-File content {
-#!/bin/bash
-
-source /ext3/miniconda3/etc/profile.d/conda.sh
-export PATH=/ext3/miniconda3/bin:$PATH
-export PYTHONPATH=/ext3/miniconda3/bin:$PYTHONPATH
-}
+touch /ext3/env.sh
+echo '#!/bin/bash' >> /ext3/env.sh
+echo >> /ext3/env.sh
+echo 'source /ext3/miniconda3/etc/profile.d/conda.sh' >> /ext3/env.sh
+echo 'export PATH=/ext3/miniconda3/bin:$PATH' >> /ext3/env.sh
+echo 'export PYTHONPATH=/ext3/miniconda3/bin:$PYTHONPATH' >> /ext3/env.sh
 
 source /ext3/env.sh
 
@@ -62,7 +57,7 @@ conda install pip -y
 exit    # exits Singularity
 
 # Next, we can install packages. 
-srun --cpus-per-task=2 --mem=10GB --time=01:00:00 --pty /bin/bash
+srun --cpus-per-task=2 --mem=10GB --time=01:00:00 --gres=gpu:1 --pty /bin/bash
 
 source ./sing rw
 source /ext3/env.sh
@@ -74,7 +69,6 @@ conda install -y pytorch torchvision torchaudio pytorch-cuda=11.6 -c pytorch -c 
 # install other packages here. 
 
 exit    # exits Singularity
-exit    # exits srun
 
 # Test
 source ./sing ro
@@ -82,5 +76,12 @@ source /ext3/env.sh
 python
 import torch
 torch.__file__
+# '/ext3/miniconda3/lib/python3.9/site-packages/torch/__init__.py'
 torch.__version__
+# '1.13.1'
 torch.cuda.is_available()
+# False
+
+exit()  # exits python
+exit    # exits Singularity
+exit    # exits srun
