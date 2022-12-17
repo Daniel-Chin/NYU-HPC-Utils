@@ -54,7 +54,7 @@ conda install pip -y
     # output: /ext3/miniconda3/bin/python
 
     python --version
-    # output: Python 3.8.5
+    # output: Python 3.9.12
 
     which pip
     # output: /ext3/miniconda3/bin/pip
