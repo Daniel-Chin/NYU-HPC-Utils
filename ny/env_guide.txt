@@ -56,7 +56,7 @@ conda install pip -y
 
 exit    # exits Singularity
 
-# Next, we can install packages. 
+# Next, go to a compute node to install packages. 
 srun --cpus-per-task=2 --mem=10GB --time=01:00:00 --pty /bin/bash
 
 source ./sing rw
