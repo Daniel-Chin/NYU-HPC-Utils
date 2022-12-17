@@ -68,7 +68,7 @@ source ./sing rw
 source /ext3/env.sh
 
 # for example, let's install pytorch
-conda install pytorch torchvision torchaudio pytorch-cuda=11.6 -c pytorch -c nvidia
+conda install -y pytorch torchvision torchaudio pytorch-cuda=11.6 -c pytorch -c nvidia
 # for latest, https://pytorch.org/get-started/locally/
 
 # install other packages here. 
