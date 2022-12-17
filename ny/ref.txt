@@ -1,0 +1,12 @@
+Env with singularity
+https://sites.google.com/nyu.edu/nyu-hpc/hpc-systems/greene/getting-started?authuser=0
+This is the "getting started" article. Search for "singularity". 
+
+https://sites.google.com/nyu.edu/nyu-hpc/hpc-systems/greene/software/singularity-with-miniconda?authuser=0
+
+https://sites.google.com/nyu.edu/nyu-hpc/hpc-systems/greene/software/conda-environments-python-r?authuser=0
+
+Dataset with singularity
+https://sites.google.com/nyu.edu/nyu-hpc/training-support/general-hpc-topics/ai-at-hpc-tips/large-number-of-small-files?authuser=0
+
+https://sites.google.com/nyu.edu/nyu-hpc/hpc-systems/hpc-storage/data-management/squash-file-system-and-singularity?authuser=0
