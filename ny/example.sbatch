@@ -14,4 +14,4 @@
 
 module purge
 source /scratch/$USER/py_env/{env}/select_images
-singularity exec --overlay ./$OVERLAY:ro /scratch/work/public/singularity/$SINGULARITY /bin/bash -c "source /ext3/env.sh; python {ENTRY_SCRIPT}.py"
+singularity exec --overlay /scratch/$USER/py_env/{env}/$OVERLAY:ro /scratch/work/public/singularity/$SINGULARITY /bin/bash -c "source /ext3/env.sh; python {ENTRY_SCRIPT}.py"
