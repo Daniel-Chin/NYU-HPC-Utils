@@ -83,3 +83,4 @@ python
 import torch
 torch.__file__
 torch.__version__
+torch.cuda.is_available()
