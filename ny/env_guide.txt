@@ -57,7 +57,7 @@ conda install pip -y
 exit    # exits Singularity
 
 # Next, we can install packages. 
-srun --cpus-per-task=2 --mem=10GB --time=01:00:00 --gres=gpu:1 --pty /bin/bash
+srun --cpus-per-task=2 --mem=10GB --time=01:00:00 --pty /bin/bash
 
 source ./sing rw
 source /ext3/env.sh
@@ -69,8 +69,10 @@ conda install -y pytorch torchvision torchaudio pytorch-cuda=11.6 -c pytorch -c 
 # install other packages here. 
 
 exit    # exits Singularity
+exit    # exits srun
 
 # Test
+srun --mem=2GB --time=01:00:00 --gres=gpu:1 --pty /bin/bash
 source ./sing ro
 source /ext3/env.sh
 python
