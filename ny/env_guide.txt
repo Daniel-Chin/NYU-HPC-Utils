@@ -17,18 +17,21 @@ cd $ENV_NAME
 
     SINGULARITY=cuda11.6.124-cudnn8.4.0.27-devel-ubuntu20.04.4.sif
 
+echo '#!/bin/bash' > ./select_images
+echo ENV_NAME=$ENV_NAME >> ./select_images
+echo OVERLAY=$OVERLAY >> ./select_images
+echo SINGULARITY=$SINGULARITY >> ./select_images
+
 cp -rp /scratch/work/public/overlay-fs-ext3/$OVERLAY.gz .
 gunzip $OVERLAY.gz
 
-echo "singularity exec \$2 --overlay /scratch/$USER/py_env/$ENV_NAME/$OVERLAY:\$1 /scratch/work/public/singularity/$SINGULARITY /bin/bash" > ./sing
-source ./sing rw
+singularity exec --overlay /scratch/$USER/py_env/$ENV_NAME/$OVERLAY:rw /scratch/work/public/singularity/$SINGULARITY /bin/bash
 
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
 sh Miniconda3-latest-Linux-x86_64.sh -b -p /ext3/miniconda3
 rm Miniconda3-latest-Linux-x86_64.sh    # if you don't need this file any longer
 
-touch /ext3/env.sh
-echo '#!/bin/bash' >> /ext3/env.sh
+echo '#!/bin/bash' > /ext3/env.sh
 echo >> /ext3/env.sh
 echo 'source /ext3/miniconda3/etc/profile.d/conda.sh' >> /ext3/env.sh
 echo 'export PATH=/ext3/miniconda3/bin:$PATH' >> /ext3/env.sh
@@ -58,7 +61,7 @@ exit    # exits Singularity
 # Next, go to a compute node to install packages. 
 srun --cpus-per-task=2 --mem=10GB --time=04:00:00 --pty /bin/bash
 
-source ./sing rw
+singularity exec --overlay /scratch/$USER/py_env/$ENV_NAME/$OVERLAY:rw /scratch/work/public/singularity/$SINGULARITY /bin/bash
 source /ext3/env.sh
 
 # for example, let's install pytorch
@@ -72,7 +75,7 @@ exit    # exits srun
 
 # Test
 srun --mem=2GB --time=01:00:00 --gres=gpu:1 --pty /bin/bash
-source ./sing ro --nv
+singularity exec --nv --overlay /scratch/$USER/py_env/$ENV_NAME/$OVERLAY:ro /scratch/work/public/singularity/$SINGULARITY /bin/bash
 source /ext3/env.sh
 python
 import torch
