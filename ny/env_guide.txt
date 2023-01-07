@@ -10,7 +10,7 @@ cd $ENV_NAME
 # Select an overlay image. 
     ls /scratch/work/public/overlay-fs-ext3
 
-    OVERLAY=overlay-15GB-500K.ext3
+    OVERLAY=overlay-25GB-500K.ext3
 
 # Select a Singularity image. 
     ls /scratch/work/public/singularity
@@ -61,6 +61,7 @@ exit    # exits Singularity
 # Next, go to a compute node to install packages. 
 srun --cpus-per-task=2 --mem=10GB --time=04:00:00 --pty /bin/bash
 
+source ./select_images
 singularity exec --overlay /scratch/$USER/py_env/$ENV_NAME/$OVERLAY:rw /scratch/work/public/singularity/$SINGULARITY /bin/bash
 source /ext3/env.sh
 
@@ -70,11 +71,15 @@ conda install -y pytorch torchvision torchaudio pytorch-cuda=11.6 -c pytorch -c 
 
 # install other packages here. 
 
+# take a look at how much space you took.  
+du -sh /ext3
+
 exit    # exits Singularity
 exit    # exits srun
 
 # Test
 srun --mem=2GB --time=01:00:00 --gres=gpu:1 --pty /bin/bash
+source ./select_images
 singularity exec --nv --overlay /scratch/$USER/py_env/$ENV_NAME/$OVERLAY:ro /scratch/work/public/singularity/$SINGULARITY /bin/bash
 source /ext3/env.sh
 python
@@ -84,7 +89,7 @@ torch.__file__
 torch.__version__
 # '1.13.1'
 torch.cuda.is_available()
-# False
+# True
 
 exit()  # exits python
 exit    # exits Singularity
